@@ -1,4 +1,0 @@
-/Users/fever_dreamer/Desktop/C++/OrderBook/build/CMakeFiles/OrderBook.dir
-/Users/fever_dreamer/Desktop/C++/OrderBook/build/CMakeFiles/test.dir
-/Users/fever_dreamer/Desktop/C++/OrderBook/build/CMakeFiles/edit_cache.dir
-/Users/fever_dreamer/Desktop/C++/OrderBook/build/CMakeFiles/rebuild_cache.dir
