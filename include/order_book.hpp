@@ -7,6 +7,10 @@
 #include "trade.hpp"
 #include <map>
 #include <thread>
+#include <unordered_map>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
 
 class OrderBook {
 
@@ -40,6 +44,7 @@ private:
     void cancel_orders(OrderIDs order_ids);
     void cancel_internal_order(OrderID order_id);
     void on_order_canceled(OrderPointer order);
+    bool contains(OrderID order_id) const;
     void on_order_add(OrderPointer order);
     void on_order_matched(Price price, Quantity quantity, bool is_fully_filled);
     void update_level_data(Price price, Quantity quantity, LevelData::Actions actions);

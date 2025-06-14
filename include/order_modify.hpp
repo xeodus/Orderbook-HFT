@@ -13,7 +13,7 @@ public:
     Quantity get_quantity() const { return quantity_; }
 
     OrderPointer to_order_pointer(OrderType type) {
-        return std::make_shared<Order> (type, get_order_id(), get_side(), get_price(), get_quantity());
+        return std::make_shared<Order> (type, get_order_id(), get_price(), get_side(), get_quantity());
     }
 
 private:

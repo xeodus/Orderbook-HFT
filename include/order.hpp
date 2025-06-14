@@ -10,13 +10,20 @@
 class Order {
 
 public:
-    Order(OrderType order_type, OrderID order_id, Price price, Side side, Quantity quantity): order_type_{order_type}, order_id_{order_id}, price_{price}, side_{side}, initial_quantity{quantity}, remaining_quantity{quantity} {}
+    Order(OrderType order_type, OrderID order_id, Price price, Side side, Quantity quantity)
+    : order_type_{order_type},
+    order_id_{order_id},
+    price_{price},
+    side_{side},
+    initial_quantity{quantity},
+    remaining_quantity{quantity}
+    {}
     // Order(OrderID order_id, Side side, Quantity quantity): Order(OrderType::Market, order_id, side, Constants::InvalidPrice, quantity) {}
 
     OrderType get_order_type() const { return order_type_; }
     OrderID get_order_id() const { return order_id_; }
-    Side get_side() const { return side_; }
     Price get_price() const { return price_; }
+    Side get_side() const { return side_; }
     Quantity get_initial_quantity() const { return initial_quantity; }
     Quantity get_remaining_quantity() const { return remaining_quantity; }
     Quantity get_filled_quantity() const { return get_initial_quantity() - get_remaining_quantity(); }
@@ -25,7 +32,7 @@ public:
     void fill(Quantity quantity) {
 
         if (quantity > get_remaining_quantity()) {
-            throw std::logic_error("Order cannot be filled as order size exceeded the remaining size: " + get_order_id());
+            throw std::logic_error("Order cannot be filled as order size exceeded the remaining size: " + std::to_string(get_order_id()));
         }
 
         remaining_quantity -= quantity;
@@ -34,7 +41,7 @@ public:
     void to_good_till_cancel(Price price) {
 
         if (get_order_type() != OrderType::Market) {
-            throw std::logic_error("Order cannot re-adjust itself, only market orders can: " + get_order_id());
+            throw std::logic_error("Order cannot re-adjust itself, only market orders can: " + std::to_string(get_order_id()));
         }
 
         price_ = price;
@@ -44,8 +51,8 @@ public:
 private:
     OrderType order_type_;
     OrderID order_id_;
-    Side side_;
     Price price_;
+    Side side_;
     Quantity initial_quantity;
     Quantity remaining_quantity;
 };

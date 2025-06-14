@@ -34,21 +34,24 @@ void OrderBook::prune_good_for_day() {
 
         OrderIDs order_ids;
 
-        {
-            std::scoped_lock orders_lock{orders_mutex};
+        std::scoped_lock orders_lock{orders_mutex};
 
-            for (const auto& [_, entry]: orders_) {
-                const auto& [order, _] = entry;
+        for (const auto& [_, entry]: orders_) {
+            const auto& [order, location_] = entry;
 
-                if (order->get_order_type() != OrderType::GoodForDay) {
-                    continue;
-                }
-
-                order_ids.push_back(order->get_order_id());
+            if (order->get_order_type() != OrderType::GoodForDay) {
+                continue;
             }
+
+            order_ids.push_back(order->get_order_id());
         }
+
         cancel_orders(order_ids);
     }
+}
+
+bool OrderBook::contains(OrderID order_id) const {
+    return orders_.find(order_id) != orders_.end();
 }
 
 void OrderBook::cancel_orders(OrderIDs order_ids) {
@@ -61,7 +64,7 @@ void OrderBook::cancel_orders(OrderIDs order_ids) {
 
 void OrderBook::cancel_internal_order(OrderID order_id) {
 
-    if (!orders_.contains(order_id)) {
+    if (!contains(order_id)) {
         return;
     }
 
@@ -239,7 +242,7 @@ OrderBook::~OrderBook() {
 Trades OrderBook::add_orders(OrderPointer order) {
     std::scoped_lock orders_lock{orders_mutex};
 
-    if (orders_.contains(order->get_order_id())) {
+    if (contains(order->get_order_id())) {
         return {};
     }
 
@@ -301,7 +304,7 @@ Trades OrderBook::modify_order(OrderModify order) {
 
     {
         std::scoped_lock orders_lock{orders_mutex};
-        if (!orders_.contains(order.get_order_id())) {
+        if (!contains(order.get_order_id())) {
             return {};
         }
         const auto& [exsiting_order, _] = orders_.at(order.get_order_id());
